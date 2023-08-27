@@ -1,69 +1,56 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import { Link, useLocation } from "react-router-dom";
+import { FiX } from "react-icons/fi";
+import { motion } from "framer-motion";
 
-const Header = () => {
-  const [isShowMenu, setIsShowMenu] = useState(false);
+const Sidebar = ({ isShow, actionClose }) => {
+  const { pathname } = useLocation();
 
-  function handleCloseMenu() {
-    setIsShowMenu(false);
-  }
+  const menu = {
+    open: {
+      right: 0,
+      transition: {
+        delay: 0.3,
+      },
+    },
+    close: {
+      right: -280,
+      transition: {
+        delay: 0.3,
+      },
+    },
+  };
+  const backdropMenu = {
+    open: { zIndex: 30, opacity: 1 },
+    close: {
+      zIndex: -10,
+      opacity: 0,
+      transition: {
+        delay: 0.4,
+      },
+    },
+  };
 
   return (
-    <header className="w-full sticky top-0 z-20 backdrop-blur-2xl blur-0 opacity-100">
-      <nav className="container flex items-center py-2 px-4 md:px-2 justify-between">
-        <div className="md:hidden">
-          <div className="flex items-center">
-            <button
-              onClick={(e) => setIsShowMenu(true)}
-              className="p-2 rounded-full duration-200 hover:bg-gray-200"
-            >
-              <svg
-                fill="none"
-                strokeWidth="0"
-                viewBox="0 0 24 24"
-                className="h-7 w-7 stroke-slate-500"
-                heighto="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                ></path>
-              </svg>
-            </button>
-            <Link to="/">
-              <button className="p-2 rounded-full duration-200 hover:bg-gray-200">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 35 32"
-                  fill="none"
-                  className="h-8 w-8 block md:hidden"
-                >
-                  <path
-                    className="fill-blue-500"
-                    d="M15.258 26.865a4.043 4.043 0 0 1-1.133 2.917 4.004 4.004 0 0 1-4.432.901 4.027 4.027 0 0 1-2.445-3.818 3.97 3.97 0 0 1 2.027-3.414c.09-.055-.024.109 0 0l1.86-1.652a8.495 8.495 0 0 0 2.304-5.793c0-2.926-1.711-5.901-4.17-7.457-.036-.094.094.055 0 0a3.975 3.975 0 0 1-2.026-3.413 4.042 4.042 0 0 1 1.133-2.918A4.006 4.006 0 0 1 11.246 1a3.99 3.99 0 0 1 2.873 1.218 4.024 4.024 0 0 1 1.133 2.917 8.52 8.52 0 0 0 2.347 5.832l.817.8c.326.285.668.551 1.024.798a3.88 3.88 0 0 1 1.504 1.431 3.901 3.901 0 0 1-1.504 5.442c-.063.036.033-.067 0 0a8.969 8.969 0 0 0-3.024 3.183 9.017 9.017 0 0 0-1.158 4.244ZM19.74 5.123c0 .796.235 1.575.676 2.237a4.01 4.01 0 0 0 1.798 1.482 3.99 3.99 0 0 0 4.366-.873 4.042 4.042 0 0 0 .869-4.386 4.02 4.02 0 0 0-1.476-1.806 3.994 3.994 0 0 0-5.058.501 4.038 4.038 0 0 0-1.175 2.845Zm4.007 17.717c-.792 0-1.567.236-2.226.678a4.021 4.021 0 0 0-1.476 1.806 4.042 4.042 0 0 0 .869 4.387 3.99 3.99 0 0 0 4.366.873 4.01 4.01 0 0 0 1.8-1.484 4.039 4.039 0 0 0-.5-5.082 4 4 0 0 0-2.832-1.18v.002ZM34 15.994a4.04 4.04 0 0 0-.675-2.236 4.01 4.01 0 0 0-1.798-1.483 3.99 3.99 0 0 0-4.367.873 4.042 4.042 0 0 0-.87 4.387 4.02 4.02 0 0 0 1.477 1.806 3.993 3.993 0 0 0 5.058-.502A4.04 4.04 0 0 0 34 15.993v.001Z"
-                  ></path>
-                  <path
-                    className="fill-blue-500"
-                    d="M5.007 11.969c-.793 0-1.567.236-2.226.678a4.02 4.02 0 0 0-1.476 1.807 4.042 4.042 0 0 0 .87 4.386 4.002 4.002 0 0 0 4.365.873 4.01 4.01 0 0 0 1.798-1.483 4.038 4.038 0 0 0-.5-5.08 4.004 4.004 0 0 0-2.83-1.181Z"
-                  ></path>
-                </svg>
-              </button>
-            </Link>
-          </div>
-          <Sidebar actionClose={handleCloseMenu} isShow={isShowMenu} />
-        </div>
-        <div className="hidden md:flex">
+    <>
+      <motion.span
+        initial={{ zIndex: -10, opacity: 0 }}
+        variants={backdropMenu}
+        animate={isShow ? "open" : "close"}
+        className="block z-30 bg-zinc-900/50 fixed w-screen h-screen inset-0"
+      ></motion.span>
+      <motion.div
+        initial={{ right: -280 }}
+        variants={menu}
+        animate={isShow ? "open" : "close"}
+        className="fixed z-40 w-[280px] h-screen bg-white top-0 flex flex-col"
+      >
+        <div className="p-7 pb-2 border-b flex items-center justify-between border-gray-300 mb-7">
           <Link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="140"
               height="35"
-              className="text-primary-900 hidden md:block ml-6"
+              fill="none"
             >
               <path
                 className="fill-blue-500"
@@ -80,145 +67,225 @@ const Header = () => {
               ></path>
             </svg>
           </Link>
-          <ul className="flex gap-x-6 text-slate-500">
-            <li className="block">
-              <Link
-                to="/"
-                className="h-full flex items-center gap-2 hover:text-blue-500 duration-200 group"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="h-5 w-5"
-                >
-                  <path
-                    className="stroke-slate-500 group-hover:stroke-blue-500 duration-200"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.667 11.16V3.113c0-.8-.654-1.393-1.447-1.326h-.04c-1.4.12-3.527.833-4.713 1.58l-.114.073a.739.739 0 0 1-.706 0l-.167-.1C6.293 2.6 4.173 1.893 2.773 1.78a1.312 1.312 0 0 0-1.44 1.327v8.053c0 .64.52 1.24 1.16 1.32l.194.027c1.446.193 3.68.926 4.96 1.626l.026.014c.18.1.467.1.64 0 1.28-.707 3.52-1.447 4.974-1.64l.22-.027c.64-.08 1.16-.68 1.16-1.32ZM8 3.66v10m-2.833-8h-1.5m2 2h-2"
-                  ></path>
-                </svg>
-                <span>دوره های آموزشی</span>
-              </Link>
-            </li>
-            <li className="block">
-              <Link
-                to="/"
-                className="h-full flex items-center gap-2 hover:text-blue-500 duration-200 group"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="h-5 w-5"
-                >
-                  <path
-                    className="stroke-slate-500 group-hover:stroke-blue-500 duration-200"
-                    strokeWidth="1.5"
-                    d="m15.875 19.487.18-.124c.566-.391.849-.587 1.101-.796a7.495 7.495 0 0 0 2.603-4.476c.056-.323.086-.664.144-1.346l.03-.353A17.996 17.996 0 0 0 19.906 9l-.036-.349a5.75 5.75 0 0 0-3.205-4.574 10.642 10.642 0 0 0-9.328 0A5.75 5.75 0 0 0 4.13 8.65L4.094 9a17.993 17.993 0 0 0-.029 3.391l.03.353c.06.682.089 1.023.145 1.346a7.495 7.495 0 0 0 2.603 4.476c.253.21.535.405 1.1.796l.18.124c.769.532 1.153.797 1.538.982a5.41 5.41 0 0 0 4.676 0c.385-.185.77-.45 1.537-.982Z"
-                  ></path>
-                  <path
-                    className="stroke-slate-500 group-hover:stroke-blue-500 duration-200"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="m9.25 11.75 2 2 3.5-3.75"
-                  ></path>
-                </svg>
-                <span>استخدامی بچه ها</span>
-              </Link>
-            </li>
-            <li className="block">
-              <Link
-                to="/"
-                className="h-full flex items-center gap-2 hover:text-blue-500 duration-200 group"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  className="h-5 w-5"
-                >
-                  <path
-                    className="stroke-slate-500 group-hover:stroke-blue-500 duration-200"
-                    strokeLinecap="round"
-                    strokeWidth="1.5"
-                    d="m6.793 8.625 2.142 1.53a1.832 1.832 0 0 0 2.13 0l2.142-1.53M2.404 12.626a10.897 10.897 0 0 1 0-5.252 6.127 6.127 0 0 1 4.621-4.506l.379-.084a12 12 0 0 1 5.192 0l.379.084a6.127 6.127 0 0 1 4.62 4.506 10.897 10.897 0 0 1 0 5.252 6.127 6.127 0 0 1-4.62 4.506l-.379.084c-1.71.379-3.482.379-5.192 0l-.379-.084a6.127 6.127 0 0 1-4.62-4.506Z"
-                  ></path>
-                </svg>
-                <span>ارتباط با ما</span>
-              </Link>
-            </li>
-          </ul>
+          <button onClick={actionClose}>
+            <FiX className="text-2xl text-slate-500" />
+          </button>
         </div>
-        <div className="flex gap-4">
-          <Link to="/cart">
-            <button className="p-1.5 w-10 h-10 border border-gray-200 rounded-2xl hover:bg-gray-200/40 duration-150 relative">
+        <ul className="overflow-y-auto pt-5 pr-7 text-slate-500 gap-2 flex flex-col text-lg flex-1">
+          <li onClick={actionClose} className="block h-[40px]">
+            <Link to="/" className="h-full flex items-center gap-2 relative">
+              <motion.img
+                initial={{ right: -56 }}
+                animate={pathname === "/" ? { right: -28 } : { right: -56 }}
+                transition={{ duration: 0.1 }}
+                className={`${
+                  pathname === "/" ? "block" : "hidden"
+                } h-20 absolute -top-4 -right-7`}
+                src="/images/indicator.svg"
+                alto="indicator"
+                loading="lazy"
+                width="17"
+                heighto="44"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 22 22"
+                fill="none"
+                className="h-5 w-5"
+              >
+                <path
+                  className={`duration-200 ${
+                    pathname === "/" ? "fill-blue-500" : "fill-slate-500"
+                  }`}
+                  d="M20.04 9.719a.75.75 0 0 0-1.5 0h1.5Zm-14.58 0a.75.75 0 1 0-1.5 0h1.5Zm9.053 10.988-.172-.73.172.73Zm-5.026 0 .172-.73-.172.73Zm5.341-15.693-.532.529.532-.529Zm5.64 6.744a.75.75 0 1 0 1.064-1.057l-1.064 1.057ZM9.172 5.014l.532.529-.532-.529Zm-6.704 5.687a.75.75 0 1 0 1.064 1.057l-1.064-1.057Zm7.25 7.62-.737-.14.737.14Zm.02-.104.737.139-.737-.139Zm4.524 0-.737.139.737-.139Zm.02.103.737-.138-.737.138Zm-.29 2.232-.677-.322.677.322Zm-.794-.077a.75.75 0 0 0 1.354.645l-1.354-.645Zm-3.19.077-.677.322.677-.322Zm-.56.568a.75.75 0 0 0 1.354-.645l-1.354.645Zm1.913-4.677-.2-.723.2.723Zm1.278 0 .2-.723-.2.723Zm5.901-6.724v4.918h1.5V9.72h-1.5ZM5.46 14.637V9.72h-1.5v4.918h1.5Zm8.88 5.34a10.18 10.18 0 0 1-4.68 0l-.346 1.46a11.68 11.68 0 0 0 5.372 0l-.345-1.46Zm-4.68 0c-2.457-.58-4.2-2.79-4.2-5.34h-1.5c0 3.24 2.214 6.058 5.354 6.8l.345-1.46Zm5.026 1.46c3.14-.742 5.354-3.56 5.354-6.8h-1.5c0 2.55-1.743 4.76-4.2 5.34l.346 1.46Zm-.39-15.894 6.172 6.215 1.064-1.057-6.171-6.215-1.065 1.057ZM8.64 4.486 2.468 10.7l1.064 1.057 6.172-6.215-1.065-1.057Zm6.722 0c-.652-.657-1.193-1.204-1.68-1.577-.502-.387-1.035-.659-1.681-.659v1.5c.183 0 .397.064.768.348.387.298.847.758 1.528 1.445l1.065-1.057ZM9.704 5.543c.681-.687 1.14-1.147 1.528-1.445.37-.284.585-.348.768-.348v-1.5c-.646 0-1.178.272-1.682.659-.486.373-1.027.92-1.679 1.577l1.065 1.057Zm.752 12.916.019-.103L9 18.079l-.02.103 1.475.277Zm3.07-.103.018.103 1.475-.277-.02-.103-1.474.277Zm-.211 1.874-.117.245 1.354.645.117-.246-1.354-.644Zm-3.984.644.117.246 1.354-.645-.117-.245-1.354.644Zm4.213-2.415c.113.6.032 1.22-.23 1.77l1.355.645c.399-.837.52-1.78.35-2.692l-1.475.277Zm-4.563-.277a4.385 4.385 0 0 0 .35 2.692l1.354-.644a2.884 2.884 0 0 1-.23-1.771l-1.474-.277Zm2.58-1.017c.287-.08.59-.08.877 0l.401-1.445a3.138 3.138 0 0 0-1.678 0l.4 1.445ZM15 18.08a3.024 3.024 0 0 0-2.16-2.36l-.4 1.446c.554.154.978.614 1.086 1.19L15 18.08Zm-4.524.277a1.524 1.524 0 0 1 1.087-1.19l-.401-1.446A3.024 3.024 0 0 0 9 18.079l1.474.277Z"
+                ></path>
+              </svg>
+              <span
+                className={`duration-200 ${
+                  pathname === "/" ? "text-blue-500" : null
+                }`}
+              >
+                خانه
+              </span>
+            </Link>
+          </li>
+          <li onClick={actionClose} className="block h-[40px]">
+            <Link
+              to="/courses"
+              className="h-full flex items-center gap-2 relative"
+            >
+              <motion.img
+                initial={{ right: -56 }}
+                animate={
+                  pathname === "/courses" ? { right: -28 } : { right: -56 }
+                }
+                transition={{ duration: 0.1 }}
+                className={`${
+                  pathname === "/courses" ? "block" : "hidden"
+                } h-20 absolute -top-4 -right-7`}
+                src="/images/indicator.svg"
+                alto="indicator"
+                loading="lazy"
+                width="17"
+                heighto="44"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="h-5 w-5"
+              >
+                <path
+                  className={`duration-200 ${
+                    pathname === "/courses"
+                      ? "stroke-blue-500"
+                      : "stroke-slate-500"
+                  }`}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.667 11.16V3.113c0-.8-.654-1.393-1.447-1.326h-.04c-1.4.12-3.527.833-4.713 1.58l-.114.073a.739.739 0 0 1-.706 0l-.167-.1C6.293 2.6 4.173 1.893 2.773 1.78a1.312 1.312 0 0 0-1.44 1.327v8.053c0 .64.52 1.24 1.16 1.32l.194.027c1.446.193 3.68.926 4.96 1.626l.026.014c.18.1.467.1.64 0 1.28-.707 3.52-1.447 4.974-1.64l.22-.027c.64-.08 1.16-.68 1.16-1.32ZM8 3.66v10m-2.833-8h-1.5m2 2h-2"
+                ></path>
+              </svg>
+              <span
+                className={`duration-200 ${
+                  pathname === "/courses" ? "text-blue-500" : null
+                }`}
+              >
+                دوره های آموزشی
+              </span>
+            </Link>
+          </li>
+          <li onClick={actionClose} className="block h-[40px]">
+            <Link
+              to="/hired"
+              className="h-full flex items-center gap-2 relative"
+            >
+              <motion.img
+                initial={{ right: -56 }}
+                animate={
+                  pathname === "/hired" ? { right: -28 } : { right: -56 }
+                }
+                transition={{ duration: 0.1 }}
+                className={`${
+                  pathname === "/hired" ? "block" : "hidden"
+                } h-20 absolute -top-4`}
+                src="/images/indicator.svg"
+                alto="indicator"
+                loading="lazy"
+                width="17"
+                heighto="44"
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="none"
-                className="h-6 w-6 text-slate-700"
+                className="h-5 w-5"
               >
                 <path
-                  className="fill-slate-700"
-                  d="m3.19 15.437.851-.207-.85.207Zm0-6.182-.85-.208.85.208Zm17.445 0 .85-.208-.85.208Zm0 6.182.85.208-.85-.208Zm-5.76 5.348-.192-.854.192.854Zm-5.924 0-.193.854.193-.854Zm0-16.878.192.854-.192-.854Zm5.924 0 .192-.854-.192.854Zm-6.446 16.76.192-.853-.192.854Zm6.968 0 .192.854-.192-.854Zm0-16.642-.193.853.193-.853Zm-6.968 0-.193-.854.193.854Zm-4.254 1.61-.86.158.86-.158ZM3.47 6.65a.875.875 0 0 0 1.721-.315L3.47 6.65ZM1.327 1.727a.875.875 0 1 0-.308 1.723l.308-1.723Zm6.462 19.334c.087.188.121.4.096.608l1.738.208a2.878 2.878 0 0 0-.247-1.554l-1.587.738Zm.096.608c-.025.21-.107.404-.234.562l1.364 1.096c.334-.416.544-.92.608-1.45l-1.738-.208Zm-.234.562a1.019 1.019 0 0 1-.474.331l.549 1.662c.507-.168.954-.48 1.289-.896L7.65 22.23Zm-.474.331a.968.968 0 0 1-.56.015l-.46 1.688c.516.14 1.06.127 1.569-.041l-.549-1.662Zm-.56.015a1.011 1.011 0 0 1-.487-.305l-1.306 1.165c.356.399.818.688 1.333.828l.46-1.688Zm-.487-.305a1.1 1.1 0 0 1-.261-.547l-1.725.294c.09.527.324 1.02.68 1.418l1.306-1.165Zm-.261-.547a1.13 1.13 0 0 1 .066-.613l-1.622-.658a2.88 2.88 0 0 0-.17 1.565l1.726-.294Zm.066-.613c.078-.193.206-.354.366-.469L5.284 19.22c-.434.31-.77.74-.971 1.235l1.622.658Zm11.487-.302c.15.131.263.307.322.508l1.68-.494a2.833 2.833 0 0 0-.848-1.33l-1.154 1.316Zm.322.508c.06.202.062.417.006.62l1.687.464a2.882 2.882 0 0 0-.014-1.578l-1.678.494Zm.006.62a1.09 1.09 0 0 1-.314.515l1.178 1.294c.396-.36.68-.828.823-1.345l-1.687-.465Zm-.314.515a.997.997 0 0 1-.514.249l.274 1.728a2.748 2.748 0 0 0 1.418-.683l-1.178-1.294Zm-.514.249a.971.971 0 0 1-.557-.077l-.727 1.592a2.72 2.72 0 0 0 1.558.213l-.274-1.728Zm-.557-.077a1.036 1.036 0 0 1-.44-.386l-1.475.943c.289.452.7.812 1.188 1.035l.727-1.592Zm-.44-.386a1.117 1.117 0 0 1-.175-.589l-1.75.02c.006.536.161 1.06.45 1.512l1.474-.943Zm-.175-.589a1.12 1.12 0 0 1 .161-.593l-1.495-.91A2.87 2.87 0 0 0 14 21.67l1.75-.02ZM8.62 4.878l.522-.117-.385-1.708-.522.118.385 1.707Zm6.062-.117.521.117.385-1.707-.522-.118-.384 1.708Zm.521 15.053-.521.117.384 1.708.522-.118-.385-1.707Zm-6.061.117-.522-.117-.385 1.707.522.118.385-1.707ZM4.041 15.23a12.172 12.172 0 0 1 0-5.768l-1.7-.415a13.922 13.922 0 0 0 0 6.598l1.7-.415Zm15.744-5.768a12.171 12.171 0 0 1 0 5.768l1.7.415a13.923 13.923 0 0 0 0-6.598l-1.7.415Zm-5.102 10.47a12.586 12.586 0 0 1-5.54 0l-.385 1.707c2.079.468 4.231.468 6.31 0l-.385-1.707ZM9.143 4.76a12.587 12.587 0 0 1 5.54 0l.384-1.708a14.337 14.337 0 0 0-6.309 0l.385 1.708Zm-.522 15.053c-2.233-.504-4.015-2.27-4.58-4.584l-1.7.415c.717 2.937 2.992 5.222 5.895 5.876l.385-1.707Zm6.968 1.707c2.903-.654 5.179-2.939 5.896-5.876l-1.7-.415c-.565 2.313-2.347 4.08-4.58 4.584l.384 1.707Zm-.385-16.643c2.234.504 4.016 2.27 4.58 4.584l1.7-.415c-.716-2.937-2.992-5.221-5.895-5.876l-.385 1.707ZM8.236 3.171c-2.903.655-5.178 2.939-5.895 5.876l1.7.415c.565-2.313 2.347-4.08 4.58-4.584l-.385-1.707ZM3.7 17.124h16.426v-1.75H3.7v1.75ZM3.314 5.793l.157.856 1.721-.315-.156-.856-1.722.315ZM1.02 3.45c1.147.205 2.073 1.128 2.295 2.343l1.722-.315c-.35-1.907-1.817-3.413-3.71-3.75L1.02 3.45Z"
+                  className={`duration-200 ${
+                    pathname === "/hired"
+                      ? "stroke-blue-500"
+                      : "stroke-slate-500"
+                  }`}
+                  strokeWidth="1.5"
+                  d="m15.875 19.487.18-.124c.566-.391.849-.587 1.101-.796a7.495 7.495 0 0 0 2.603-4.476c.056-.323.086-.664.144-1.346l.03-.353A17.996 17.996 0 0 0 19.906 9l-.036-.349a5.75 5.75 0 0 0-3.205-4.574 10.642 10.642 0 0 0-9.328 0A5.75 5.75 0 0 0 4.13 8.65L4.094 9a17.993 17.993 0 0 0-.029 3.391l.03.353c.06.682.089 1.023.145 1.346a7.495 7.495 0 0 0 2.603 4.476c.253.21.535.405 1.1.796l.18.124c.769.532 1.153.797 1.538.982a5.41 5.41 0 0 0 4.676 0c.385-.185.77-.45 1.537-.982Z"
                 ></path>
                 <path
-                  className="stroke-slate-700"
+                  className={`duration-200 ${
+                    pathname === "/hired"
+                      ? "stroke-blue-500"
+                      : "stroke-slate-500"
+                  }`}
                   strokeLinecap="round"
-                  strokeWidth="1.75"
-                  d="m13.423 7.256.047.006c1.993.285 3.453 1.762 3.453 3.494"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="m9.25 11.75 2 2 3.5-3.75"
                 ></path>
               </svg>
-              {/* badge */}
-              <span className="flex items-center justify-center w-5 h-5 text-sm bg-red-500 text-white rounded-full absolute -top-1.5 -right-1.5">
-                0
+              <span
+                className={`duration-200 ${
+                  pathname === "/hired" && "text-blue-500"
+                }`}
+              >
+                استخدامی بچه ها
               </span>
+            </Link>
+          </li>
+          <li className="block h-[40px]">
+            <Link to="/" className="h-full flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="none"
+                className="h-5 w-5"
+              >
+                <path
+                  className="stroke-slate-500 group-hover:stroke-blue-500 duration-200"
+                  strokeLinecap="round"
+                  strokeWidth="1.5"
+                  d="m6.793 8.625 2.142 1.53a1.832 1.832 0 0 0 2.13 0l2.142-1.53M2.404 12.626a10.897 10.897 0 0 1 0-5.252 6.127 6.127 0 0 1 4.621-4.506l.379-.084a12 12 0 0 1 5.192 0l.379.084a6.127 6.127 0 0 1 4.62 4.506 10.897 10.897 0 0 1 0 5.252 6.127 6.127 0 0 1-4.62 4.506l-.379.084c-1.71.379-3.482.379-5.192 0l-.379-.084a6.127 6.127 0 0 1-4.62-4.506Z"
+                ></path>
+              </svg>
+              <span>ارتباط با ما</span>
+            </Link>
+          </li>
+        </ul>
+        <div className="p-7 flex gap-2 items-center">
+          <div className="flex-1 flex items-center gap-4 text-sm text-slate-500">
+            <Link to="/">
+              <div className="text-white w-11 h-11 flex items-center justify-center bg-gray-400 rounded-full border-2 relative">
+                M
+                <span className="absolute bottom-0 right-0 rounded-full bg-green-500 w-2 h-2 block">
+                  <span className="absolute inset-0 animate-ping rounded-full bg-green-500 w-2 h-2 block"></span>
+                </span>
+              </div>
+            </Link>
+            <div className="flex flex-col">
+              <Link to="/">
+                <span className="font-bold text-[13px] text-slate-600">
+                  MAHDIBASHIRI
+                </span>
+              </Link>
+              <span className="opacity-70">دانشجو</span>
+            </div>
+          </div>
+          <Link to="/">
+            <button className="p-2 rounded-full duration-200 hover:bg-gray-200/70">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 14 14"
+                fill="none"
+                className="h-5 w-5 text-secondary-700 opacity-100"
+              >
+                <path
+                  className="stroke-slate-500"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="0.875"
+                  d="M7.779 11.38h3.72"
+                ></path>
+                <path
+                  className="stroke-slate-500"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="0.875"
+                  d="M9.367 2.834v0a1.774 1.774 0 0 0-2.484.354L2.945 8.436c-1.015 1.352-.055 3.027-.055 3.027s1.892.435 2.892-.898L9.72 5.318a1.774 1.774 0 0 0-.354-2.484Z"
+                  clipRule="evenodd"
+                ></path>
+                <path
+                  stroke="#fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="0.875"
+                  d="m6.127 4.207 2.838 2.13"
+                ></path>
+              </svg>
             </button>
           </Link>
-          <button className="px-0.5 overflow-hidden h-10 border border-gray-200 rounded-2xl hover:bg-gray-200/40 duration-150 flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="w-6 h-6 text-secondary-700"
-            >
-              <g
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                clipPath="url(#account_svg__a)"
-              >
-                <path d="M12 13.8c3.06 0 5.54-2.42 5.54-5.4C17.54 5.42 15.06 3 12 3S6.46 5.42 6.46 8.4c0 2.98 2.48 5.4 5.54 5.4ZM6 21c2.69-4.42 9.24-4.44 11.97-.05L18 21"></path>
-              </g>
-              <defs>
-                <clipPath id="account_svg__a">
-                  <path fill="#fff" d="M0 0h24v24H0z"></path>
-                </clipPath>
-              </defs>
-            </svg>
-            <svg
-              strokeWidth="0"
-              viewBox="0 0 20 20"
-              className="text-slate-600 w-4 h-4 min-w-[16px]"
-              heighto="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
         </div>
-      </nav>
-    </header>
+      </motion.div>
+    </>
   );
 };
 
-export default Header;
+export default Sidebar;
